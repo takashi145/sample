@@ -1,0 +1,118 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <script src="https://unpkg.com/three@0.137.4/build/three.min.js"></script>
+    <script src="https://unpkg.com/three@0.137.4/examples/js/controls/OrbitControls.js"></script>
+  </head>
+<body>
+ <script>
+      // ページの読み込みを待つ
+      window.addEventListener('DOMContentLoaded', init);
+
+      function init() {
+        // サイズを指定
+        const width = 800
+        const height = 600;
+
+        // レンダラーを作成
+        var renderer = new THREE.WebGLRenderer();
+        document.body.appendChild(renderer.domElement);
+        renderer.setSize(width, height);
+
+        renderer.shadowMap.enabled = true;
+
+        // シーンを作成
+        const scene = new THREE.Scene();
+
+        // カメラを作成
+        const camera = new THREE.PerspectiveCamera(45, width / height);
+        // カメラの初期座標を設定
+        camera.position.set(-9, 6, 8);
+
+        // カメラコントローラー
+        const controls = new THREE.OrbitControls(camera, document.body); 
+        
+        // 平行光源(色、強さ）主光源
+        var directionalLightM = new THREE.DirectionalLight(0xffffff, 0.5);
+        directionalLightM.position.set(0, 10, 0);
+        directionalLightM.castShadow = true; 
+        scene.add(directionalLightM);
+
+        // 照明を作成SpotLight(色, 光の強さ, 距離, 照射角, ボケ具合, 減衰率)
+        var light = new THREE.SpotLight(0xffffff, 1, 100, Math.PI / 30, 0.1);
+        light.position.set(0, 30, 10);
+        light.target.position.set( 0, 5, -100 );
+        // light.castShadow = true;
+        light.shadow.mapSize.width = 2048;
+        light.shadow.mapSize.height = 2048;
+        scene.add(light);
+
+        // 平行光源(色、強さ）補助光源
+        var directionalLightS = new THREE.DirectionalLight(0xffffff,0.3);
+        directionalLightS.position.set(-1, -1, 1);
+        scene.add(directionalLightS);
+
+        // helper
+        const gridHelper = new THREE.GridHelper(2,10);
+        scene.add(gridHelper);
+        const axisHelper = new THREE.AxisHelper(2);
+        scene.add(axisHelper);
+
+        // 平面を作成
+        var planeGeometry = new THREE.PlaneGeometry(10, 10);
+        var planeMaterial = new THREE.MeshPhongMaterial({ color: 0xafeeee });
+        var plane = new THREE.Mesh(planeGeometry,planeMaterial);
+        plane.receiveShadow = true; //影
+        plane.rotation.set( -Math.PI/2, 0, 0 );
+        plane.position.set(0, -2, -2);
+        scene.add(plane);
+
+        // 串
+        var cylinderGeometry = new THREE.CylinderGeometry(0.05 ,0.05, 5, 30);
+        var cylinderMaterial = new THREE.MeshPhongMaterial({color: 0xdaa520});
+        var cylinder = new THREE.Mesh(cylinderGeometry, cylinderMaterial);
+        cylinder.castShadow = true;
+        cylinder.position.set(-1,0,0);
+
+        // 団子(ピンク)
+        var sphereGeometry = new THREE.SphereGeometry(0.5, 32, 32);
+        var sphereMaterial = new THREE.MeshPhongMaterial({color: 0xffc0cd});
+        var sphere1 = new THREE.Mesh(sphereGeometry, sphereMaterial);
+        sphere1.castShadow = true; 
+        sphere1.position.set(-1,1.8,0);
+
+        //団子(白)
+        var sphereGeometry = new THREE.SphereGeometry(0.5, 32, 32);
+        var sphereMaterial = new THREE.MeshPhongMaterial({color: 0xffffff});
+        var sphere2 = new THREE.Mesh(sphereGeometry, sphereMaterial);
+        sphere2.castShadow = true; 
+        sphere2.position.set(-1,0.8,0);
+
+        //団子(緑)
+        var sphereGeometry = new THREE.SphereGeometry(0.5, 32, 32);
+        var sphereMaterial = new THREE.MeshPhongMaterial({color: 0x7fff00});
+        var sphere3 = new THREE.Mesh(sphereGeometry, sphereMaterial);
+        sphere3.castShadow = true; 
+        sphere3.position.set(-1,-0.2,0);
+        
+        const dango = new THREE.Group();
+        dango.add(cylinder); // 串
+        dango.add(sphere1); //団子(ピンク)を追加
+        dango.add(sphere2); //団子(白)を追加
+        dango.add(sphere3); //団子(緑)を追加
+        dango.position.set(0, 1, 0);//ペンギングループの原点の位置
+        scene.add(dango);
+
+        update();
+
+        function update() {
+          renderer.render(scene, camera);
+          requestAnimationFrame(update);
+          
+          dango.rotation.x += 0.01;
+          
+        }
+      }
+    </script>
+</body>
+</html>
