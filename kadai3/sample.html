@@ -5,8 +5,7 @@
     <script src="https://unpkg.com/three@0.137.4/examples/js/controls/OrbitControls.js"></script>
   </head>
 <body>
- <script>
-      // ページの読み込みを待つ
+    <script>
       window.addEventListener('DOMContentLoaded', init);
 
       function init() {
@@ -66,41 +65,41 @@
         plane.rotation.set( -Math.PI/2, 0, 0 );
         plane.position.set(0, -2, -2);
         scene.add(plane);
-
+        
         // 串
         var cylinderGeometry = new THREE.CylinderGeometry(0.05 ,0.05, 5, 30);
         var cylinderMaterial = new THREE.MeshPhongMaterial({color: 0xdaa520});
         var cylinder = new THREE.Mesh(cylinderGeometry, cylinderMaterial);
         cylinder.castShadow = true;
-        cylinder.position.set(-1,0,0);
+        cylinder.position.set(-1, 0, 0);
 
         // 団子(ピンク)
         var sphereGeometry = new THREE.SphereGeometry(0.5, 32, 32);
         var sphereMaterial = new THREE.MeshPhongMaterial({color: 0xffc0cd});
         var sphere1 = new THREE.Mesh(sphereGeometry, sphereMaterial);
         sphere1.castShadow = true; 
-        sphere1.position.set(-1,1.8,0);
+        sphere1.position.set(-1, 1.8, 0);
 
         //団子(白)
         var sphereGeometry = new THREE.SphereGeometry(0.5, 32, 32);
         var sphereMaterial = new THREE.MeshPhongMaterial({color: 0xffffff});
         var sphere2 = new THREE.Mesh(sphereGeometry, sphereMaterial);
         sphere2.castShadow = true; 
-        sphere2.position.set(-1,0.8,0);
+        sphere2.position.set(-1, 0.8, 0);
 
         //団子(緑)
         var sphereGeometry = new THREE.SphereGeometry(0.5, 32, 32);
         var sphereMaterial = new THREE.MeshPhongMaterial({color: 0x7fff00});
         var sphere3 = new THREE.Mesh(sphereGeometry, sphereMaterial);
         sphere3.castShadow = true; 
-        sphere3.position.set(-1,-0.2,0);
+        sphere3.position.set(-1, -0.2, 0);
         
         const dango = new THREE.Group();
-        dango.add(cylinder); // 串
+        dango.add(cylinder); // 串を追加
         dango.add(sphere1); //団子(ピンク)を追加
         dango.add(sphere2); //団子(白)を追加
         dango.add(sphere3); //団子(緑)を追加
-        dango.position.set(0, 1, 0);//ペンギングループの原点の位置
+        dango.position.set(0, 1, 0);
         scene.add(dango);
 
         update();
@@ -109,7 +108,7 @@
           renderer.render(scene, camera);
           requestAnimationFrame(update);
           
-          dango.rotation.x += 0.01;
+          dango.rotation.z += 0.01;
           
         }
       }
