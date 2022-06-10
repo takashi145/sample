@@ -5,9 +5,9 @@
     <script src="https://unpkg.com/three@0.137.4/examples/js/controls/OrbitControls.js"></script>
   </head>
 <body>
-  <h1>テクスチャマッピング</h1>
-  <p></p>
-  <script>
+    <h1>ビルボードを使う</h1>
+    オタクと複数の羊を作成した。<br>
+    <script>
       // ページの読み込みを待つ
       window.addEventListener('DOMContentLoaded', init);
 
@@ -20,6 +20,9 @@
         var renderer = new THREE.WebGLRenderer();
         document.body.appendChild(renderer.domElement);
         renderer.setSize(width, height);
+        // 背景の色を設定
+        renderer.setClearColor(0xffffdd);
+
 
         // シーンを作成
         const scene = new THREE.Scene();
@@ -49,62 +52,48 @@
         // const axisHelper = new THREE.AxisHelper(2); //軸の長さ　X：赤、Y：緑、z：青
         // scene.add(axisHelper);
 
-        // テクスチャー読み込み
+        var planeGeometry = new THREE.PlaneGeometry(5, 5);
+        var planeMaterial = new THREE.MeshPhongMaterial();
+        var plane = new THREE.Mesh(planeGeometry,planeMaterial);
+        plane.rotation.set( -Math.PI/2, 0, 0 );
+        plane.position.set(0, -0.75, 0);
+        scene.add(plane);
+
         var textureLoader = new THREE.TextureLoader();  
-        var texture = textureLoader.load("img/cit.png");
-        var mat = new THREE.MeshPhongMaterial();
-        mat.map = texture;
+        var texture = textureLoader.load("img/woman.png");
+        const material1 = new THREE.SpriteMaterial({ map: texture,});
+        const sprite1 = new THREE.Sprite(material1);
+        sprite1.scale.set(2, 2, 2);
+        scene.add(sprite1);
 
-        //バンプマップ読み込み
-        var bump = textureLoader.load("img/cit.png");
-        mat.bumpMap = bump;
-        mat.bumpscale = 0.2;
+        // 羊をスプライトで作成
+        var textureLoader = new THREE.TextureLoader();  
+        var texture = textureLoader.load("img/animal.png");
+        const material2 = new THREE.SpriteMaterial({ map: texture,});
 
-        // テクスチャー読み込み
-        var texture = textureLoader.load("img/stone.jpg");
-        var mat2 = new THREE.MeshPhongMaterial();
-        mat2.map = texture;
+        for (let i = 0; i < 5; i++) {
+          const sprite2 = new THREE.Sprite(material2);
+          // ランダムな座標に配置
+          sprite2.position.x = 3 * (Math.random() - 0.5);
+          sprite2.position.y = -0.38
+          sprite2.position.z = 3 * (Math.random() - 0.5);
+          // スケールを調整
+          sprite2.scale.set(1, 1, 1);
 
-        //バンプマップ読み込み
-        var bump2 = textureLoader.load("img/stone-bump.jpg");
-        mat2.bumpMap = bump2;
-        mat2.bumpscale = 0.2;
-
-        //トーラスジオメトリ
-        var geometry1 = new THREE.TorusGeometry(0.5, 0.2, 16, 100);
-        var material = new THREE.MeshPhongMaterial({color: 0xffffff});
-        var torus = new THREE.Mesh(geometry1, mat2);
-        torus.position.set(-1.5, 0, 0);
-        scene.add(torus);
-
-        // 八面体
-        var geometry2 = new THREE.OctahedronGeometry(0.7, 0);
-        var Octahedron = new THREE.Mesh(geometry2, mat);
-        Octahedron.position.set(0,0,0);
-        scene.add(Octahedron);
-
-        // 二重面体
-        var geometry3 = new THREE.IcosahedronGeometry(0.8, 0);
-        var Icosahedron = new THREE.Mesh(geometry3, mat2);
-        Icosahedron.position.set(1.5,0,0);
-        scene.add(Icosahedron);
-
-        const objects = [torus, Octahedron, Icosahedron];
-
+          scene.add(sprite2);
+        }
+        
         update();
 
         // 毎フレーム時に実行されるループイベントです
         function update() {
+          sprite1.position.x = -Math.sin(Date.now() / 100) / 10;
+          sprite1.position.y = Math.sin(Date.now() / 100) / 10;
+
           // レンダリング
           renderer.render(scene, camera);
           requestAnimationFrame(update);
-
-          for(const obj of objects) {
-            obj.rotation.x += 0.01;
-            obj.rotation.y += 0.05;
-          }
         }
       }
     </script>
 </body>
-</html>
